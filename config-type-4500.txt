@@ -1,0 +1,364 @@
+﻿!!!Configuration CD 
+!
+service timestamps debug datetime localtime
+service timestamps log datetime localtime
+!
+config-register 0x2102
+boot system flash bootflash:cat4500e-universalk9.SPA.03.04.03.SG.151-2.SG3.bin
+!
+!
+!
+enable secret Votre_Password
+!
+username admin privilege 15 password 0 Votre_Password
+!
+hostname Votre_Nom_De_Switch
+!
+clock timezone UTC 1 0
+clock summer-time UTC date Mar 28 2013 1:00 Oct 28 2013 1:00
+!
+aaa new-model
+!
+!
+aaa authentication login default group tacacs+ local
+aaa authentication dot1x default group radius
+aaa authorization exec default group tacacs+ local 
+aaa authorization network default group radius 
+aaa accounting dot1x default start-stop group radius
+!
+!
+!
+!
+aaa server radius dynamic-author
+ client Votre_IP_Serveur_Radius server-key Chu87Dtsi
+ port 3799
+ auth-type all
+!
+hw-module uplink select tengigabitethernet
+authentication mac-move permit
+udld enable
+!
+dot1x system-auth-control
+!
+errdisable detect cause all 
+errdisable recovery cause all 
+!
+spanning-tree mode rapid-pvst
+!
+vtp mode transparent
+!
+!
+vlan 3
+ name MANAGEMENT
+! 
+vlan 71
+ name HOTSPOT
+!
+spanning-tree vlan 3,71 priority 24576
+!
+!
+ip tftp source-interface vlan3
+ip scp server enable
+
+lldp run
+!
+class-map match-all TOIP
+  match access-group name TOIP
+!
+policy-map TOIP-POLICY
+ class TOIP
+    priority
+!
+interface range giga1/1-48
+switchport mode access
+switchport voice vlan 400 
+authentication event fail action authorize vlan 71
+authentication event no-response action authorize vlan 71
+authentication host-mode multi-domain
+authentication order dot1x mab
+authentication priority dot1x mab
+authentication port-control auto
+authentication periodic
+authentication timer reauthenticate server
+mab
+dot1x pae authenticator
+dot1x timeout server-timeout 30
+dot1x timeout tx-period 3
+storm-control broadcast level 1.00
+Storm-control broadcast include multicast
+storm-control action shutdown
+Storm-control action trap
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+!
+interface range giga2/1-48
+switchport mode access
+switchport voice vlan 400 
+authentication event fail action authorize vlan 71
+authentication event no-response action authorize vlan 71
+authentication host-mode multi-domain
+authentication order dot1x mab
+authentication priority dot1x mab
+authentication port-control auto
+authentication periodic
+authentication timer reauthenticate server
+mab
+dot1x pae authenticator
+dot1x timeout server-timeout 30
+dot1x timeout tx-period 3
+storm-control broadcast level 1.00
+Storm-control broadcast include multicast
+storm-control action shutdown
+Storm-control action trap
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+!
+interface range giga5/1-48
+switchport mode access
+switchport voice vlan 400 
+authentication event fail action authorize vlan 71
+authentication event no-response action authorize vlan 71
+authentication host-mode multi-domain
+authentication order dot1x mab
+authentication priority dot1x mab
+authentication port-control auto
+authentication periodic
+authentication timer reauthenticate server
+mab
+dot1x pae authenticator
+dot1x timeout server-timeout 30
+dot1x timeout tx-period 3
+storm-control broadcast level 1.00
+Storm-control broadcast include multicast
+storm-control action shutdown
+Storm-control action trap
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+!
+interface range giga6/1-48
+switchport mode access
+switchport voice vlan 400 
+authentication event fail action authorize vlan 71
+authentication event no-response action authorize vlan 71
+authentication host-mode multi-domain
+authentication order dot1x mab
+authentication priority dot1x mab
+authentication port-control auto
+authentication periodic
+authentication timer reauthenticate server
+mab
+dot1x pae authenticator
+dot1x timeout server-timeout 30
+dot1x timeout tx-period 3
+storm-control broadcast level 1.00
+Storm-control broadcast include multicast
+storm-control action shutdown
+Storm-control action trap 
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+!
+interface range giga7/1-48
+switchport mode access
+switchport voice vlan 400 
+authentication event fail action authorize vlan 71
+authentication event no-response action authorize vlan 71
+authentication host-mode multi-domain
+authentication order dot1x mab
+authentication priority dot1x mab
+authentication port-control auto
+authentication periodic
+authentication timer reauthenticate server
+mab
+dot1x pae authenticator
+dot1x timeout server-timeout 30
+dot1x timeout tx-period 3
+storm-control broadcast level 1.00
+Storm-control broadcast include multicast
+storm-control action shutdown
+Storm-control action trap
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+!
+ip default-gateway Votre_IP_De_Passrelle
+!
+ip http server
+ip http secure-server
+!
+!
+logging host Votre_IP_De_Serveur_De_Log
+!
+snmp-server community public RO
+snmp-server community private RW
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps flowmon
+snmp-server enable traps transceiver all
+snmp-server enable traps call-home message-send-fail server-fail
+snmp-server enable traps tty
+snmp-server enable traps rf
+snmp-server enable traps memory
+snmp-server enable traps cpu_threshold
+snmp-server enable traps eigrp
+snmp-server enable traps ospf state-change
+snmp-server enable traps ospf errors
+snmp-server enable traps ospf retransmit
+snmp-server enable traps ospf lsa
+snmp-server enable traps ospf cisco-specific state-change nssa-trans-change
+snmp-server enable traps ospf cisco-specific state-change shamlink interface
+snmp-server enable traps ospf cisco-specific state-change shamlink neighbor
+snmp-server enable traps ospf cisco-specific errors
+snmp-server enable traps ospf cisco-specific retransmit
+snmp-server enable traps ospf cisco-specific lsa
+snmp-server enable traps flex-links status
+snmp-server enable traps fru-ctrl
+snmp-server enable traps entity
+snmp-server enable traps ethernet cfm cc mep-up mep-down cross-connect loop config
+snmp-server enable traps ethernet cfm crosscheck mep-missing mep-unknown service-up
+snmp-server enable traps ether-oam
+snmp-server enable traps aaa_server
+snmp-server enable traps flash insertion removal
+snmp-server enable traps l2tc threshold sys-threshold
+snmp-server enable traps power-ethernet group 1
+snmp-server enable traps power-ethernet group 2
+snmp-server enable traps power-ethernet group 5
+snmp-server enable traps power-ethernet group 6
+snmp-server enable traps power-ethernet group 7
+snmp-server enable traps power-ethernet police
+snmp-server enable traps rep
+snmp-server enable traps vswitch dual-active vsl
+snmp-server enable traps udld link-fail-rpt status-change
+snmp-server enable traps vtp
+snmp-server enable traps vlancreate
+snmp-server enable traps vlandelete
+snmp-server enable traps auth-framework sec-violation
+snmp-server enable traps dot1x auth-fail-vlan guest-vlan no-auth-fail-vlan no-guest-vlan
+snmp-server enable traps envmon fan shutdown supply temperature status
+snmp-server enable traps entity-diag boot-up-fail hm-test-recover hm-thresh-reached scheduled-test-fail
+snmp-server enable traps port-security
+snmp-server enable traps ethernet evc status create delete
+snmp-server enable traps energywise
+snmp-server enable traps ipsla
+snmp-server enable traps vstack
+snmp-server enable traps bfd
+snmp-server enable traps cef resource-failure peer-state-change peer-fib-state-change inconsistency
+snmp-server enable traps config-copy
+snmp-server enable traps config
+snmp-server enable traps config-ctid
+snmp-server enable traps event-manager
+snmp-server enable traps hsrp
+snmp-server enable traps ipmulticast
+snmp-server enable traps pim neighbor-change rp-mapping-change invalid-pim-message
+snmp-server enable traps bridge newroot topologychange
+snmp-server enable traps stpx inconsistency root-inconsistency loop-inconsistency
+snmp-server enable traps syslog
+snmp-server enable traps isakmp policy add
+snmp-server enable traps isakmp policy delete
+snmp-server enable traps isakmp tunnel start
+snmp-server enable traps isakmp tunnel stop
+snmp-server enable traps ipsec cryptomap add
+snmp-server enable traps ipsec cryptomap delete
+snmp-server enable traps ipsec cryptomap attach
+snmp-server enable traps ipsec cryptomap detach
+snmp-server enable traps ipsec tunnel start
+snmp-server enable traps ipsec tunnel stop
+snmp-server enable traps ipsec too-many-sas
+snmp-server enable traps errdisable
+snmp-server enable traps ethernet cfm alarm
+snmp-server enable traps vlan-membership
+snmp-server enable traps mac-notification change move threshold
+snmp-server enable traps vrfmib vrf-up vrf-down vnet-trunk-up vnet-trunk-down
+!
+snmp-server host Votre_IP_De_Serveur_De_Log public  config
+snmp-server host Votre_IP_De_Serveur_De_Log version 2c test  errdisable
+!
+radius-server dead-criteria time 5 tries 2
+radius-server vsa send accounting
+radius-server vsa send authentication
+!
+radius server ISE-Service
+ address ipv4 Votre_IP_Serveur_Radius auth-port 1812 acct-port 1813
+ address ipv4 Votre_IP_Serveur_Radius alias Votre_IP_Serveur_Radius
+ key Votre_Cle_Radius
+!
+radius server ISE-Service
+ address ipv4 Votre_IP_Serveur_Radius auth-port 1812 acct-port 1813
+  address ipv4 Votre_IP_Serveur_Radius alias Votre_IP_Serveur_Radius
+ key Votre_Cle_Radius
+!
+ntp source vlan3
+ntp peer Votre_IP_Serveur_NTP
+ntp server Votre_IP_Serveur_NTP
+!
+ip route 0.0.0.0 0.0.0.0 Votre_IP_De_Passrelle
+!
+!
+ip access-list extended TOIP
+ permit ip any Votre_Plage_IP_Architecture_TOIP Votre_Masque_De_reseau
+!
+!
+interface Vlan3
+ ip address Votre_Adresse_IP_Switch Votre_Masque_De_Reseau
+ no shutdown
+!
+!
+interface range te3/1,te4/1
+switchport 
+channel-group 1 mode active
+no shutdown
+!
+interface port-channel 1
+switchport
+switchport trunk allowed vlan 3,71
+switchport mode trunk
+mtu 9198
+ip dhcp snooping trust
+no shutdown
+!
+!
+interface range te3/1, te4/1
+service-policy output TOIP-POLICY
+!
+!
+!
+banner login ^CC
+
+       /$$$$$$            /$$           /$$           /$$$$$$$$          /$$                         /$$           /$$         
+ /$$__  $$          |__/          | $$          |__  $$__/         | $$                        |__/          | $$         
+| $$  \ $$ /$$   /$$ /$$  /$$$$$$$| $$   /$$       | $$ /$$   /$$ /$$$$$$    /$$$$$$   /$$$$$$  /$$  /$$$$$$ | $$         
+| $$  | $$| $$  | $$| $$ /$$_____/| $$  /$$//$$$$$$| $$| $$  | $$|_  $$_/   /$$__  $$ /$$__  $$| $$ |____  $$| $$         
+| $$  | $$| $$  | $$| $$| $$      | $$$$$$/|______/| $$| $$  | $$  | $$    | $$  \ $$| $$  \__/| $$  /$$$$$$$| $$         
+| $$/$$ $$| $$  | $$| $$| $$      | $$_  $$        | $$| $$  | $$  | $$ /$$| $$  | $$| $$      | $$ /$$__  $$| $$         
+|  $$$$$$/|  $$$$$$/| $$|  $$$$$$$| $$ \  $$       | $$|  $$$$$$/  |  $$$$/|  $$$$$$/| $$      | $$|  $$$$$$$| $$         
+ \____ $$$ \______/ |__/ \_______/|__/  \__/       |__/ \______/    \___/   \______/ |__/      |__/ \_______/|__/         
+      \__/                                                                                                                
+                                                                                                                          
+                                                                                                                                                                                                                                                  
+                                                                                          /$$$$$$$  /$$$$$$  /$$$$$$/$$$$ 
+                                                                                         /$$_____/ /$$__  $$| $$_  $$_  $$
+                                                                                        | $$      | $$  \ $$| $$ \ $$ \ $$
+                                                                                        | $$      | $$  | $$| $$ | $$ | $$
+                                                                                     /$$|  $$$$$$$|  $$$$$$/| $$ | $$ | $$
+                                                                                    |__/ \_______/ \______/ |__/ |__/ |__/
+                                                                                                                          
+^C
+!
+!
+line con 0
+ stopbits 1
+line vty 0 4
+ session-timeout 30  output
+ exec-timeout 60 0
+ logging synchronous
+ transport input telnet ssh
+line vty 5 15
+ session-timeout 30  output
+ exec-timeout 60 0
+ logging synchronous
+ transport input telnet ssh
+!
+crypto key generate rsa 
+!
